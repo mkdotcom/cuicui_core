@@ -9,7 +9,7 @@ extern task<void> UwpPickAnImageAndUpload(std::string);
 #endif
 
 #ifdef CUICUI_IOS
-#import "../projects/ios/mkw_ios_test/ViewController.h" // for cCentral::OpenFilePicker() and openCamera()
+#import "ios/cuicui_ios_host.h" // the app's root view controller: pickers, camera, status bar
 #endif
 
 
@@ -260,7 +260,7 @@ void cCentral::OpenCamera()
 #endif
 #ifdef CUICUI_IOS
     UIViewController *vc = master->uiView.window.rootViewController;
-    ViewController *v = (ViewController*)vc;
+    UIViewController<CuiHostViewController> *v = (UIViewController<CuiHostViewController>*)vc;
     [v openCamera];
 	return ; // should return "false" if app doesn't have the right, or device have no camera...  (I guess it will be asycn)
 #endif
@@ -298,11 +298,12 @@ void cCentral::OpenFilePicker(const std::string &filter, std::function<void()> o
 	if (onDisplayed) onDisplayed(); // temporary
 #elif defined(CUICUI_IOS)
 	UIViewController *vc = master->uiView.window.rootViewController;
-	ViewController *v = (ViewController*)vc;
+	UIViewController<CuiHostViewController> *v = (UIViewController<CuiHostViewController>*)vc;
     if (filter=="")
         [v openPickerDocuments];
     else
-        [v openPickerImages:onDisplayed];
+        [v openPickerImages];
+    if (onDisplayed) onDisplayed(); // temporary
 #else
 	missing 
 #endif
@@ -699,7 +700,7 @@ void cCentral::IosSpecialSettings(cColor color, UIStatusBarStyle statusBarStyle)
     assert(master!=nullptr); // you must call this method after master view is created
 
     UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
-    ViewController *v = (ViewController*)vc;
+    UIViewController<CuiHostViewController> *v = (UIViewController<CuiHostViewController>*)vc;
     [v setCurrentStatusBarStyle:statusBarStyle];
     UIView *uiView = v.view;
     assert(uiView!=nullptr); // app not ready yet?

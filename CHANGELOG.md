@@ -3,6 +3,18 @@
 All notable changes to cuicui are listed here. The API is not stable before 1.0: minor versions
 may contain breaking changes.
 
+## [Unreleased]
+
+### Changed
+- iOS: the app's root view controller adopts the `CuiHostViewController` protocol
+  (`ios/cuicui_ios_host.h`); the core no longer imports the app's `ViewController.h`.
+- iOS: SDWebImage is imported as `<SDWebImage/SDWebImage.h>` (Swift Package Manager or CocoaPods).
+- iOS: removed the obsolete static library project `ios/lib/`.
+
+### Fixed
+- iOS: `cCentral::OpenFilePicker()` called a picker method that the host didn't have.
+- iOS: a `wText` whose text changed without a new layout (e.g. created empty) stayed invisible.
+
 ## [0.1.0] — unreleased
 
 First public release. cuicui had been developed and used in-house for years; this release cleans

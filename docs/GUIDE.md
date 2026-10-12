@@ -34,6 +34,17 @@ Each platform project must list your source files:
 - **UWP**: add them to the Visual Studio project.
 - **Web**: add them to `your_app_cpp_files.txt`.
 
+### iOS host app
+On iOS the Xcode project provides a small host (see `projects/ios/` of
+[cuicui_project](https://github.com/mkdotcom/cuicui_project)):
+- the root view controller calls `central.Init()` in `viewDidLoad`, and calls
+  `OnWindowSizeChanged()` with a subview constrained to the safe area, where cuicui draws the app;
+- it adopts the `CuiHostViewController` protocol (`cuicui_core/ios/cuicui_ios_host.h`): cuicui calls
+  it for the photo picker, the camera and the status bar style;
+- [SDWebImage](https://github.com/SDWebImage/SDWebImage) must be linked (Swift Package Manager or
+  CocoaPods): `wImage` uses it for images from URLs;
+- `app/assets/` is added as a folder reference named `assets` (cuicui looks in `<bundle>/assets/`).
+
 ### Assets (images, …)
 Put them in `app/assets/`. They are copied to each platform project:
 Android copies them automatically at build time (Gradle task); the web and UWP projects use

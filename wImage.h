@@ -2,7 +2,7 @@
 
 
 #ifdef CUICUI_IOS
-#import "../projects/ios/Pods/SDWebImage/SDWebImage/Core/UIImageView+WebCache.h"
+#import <SDWebImage/SDWebImage.h> // SDWebImage (CocoaPods or Swift Package Manager) loads images from URLs
 
 #endif
 
