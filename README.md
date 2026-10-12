@@ -1,7 +1,7 @@
 # cuicui
 
 **A lightweight, "Qt-like" native UI toolkit for C++.**
-Write your app's UI once in C++, run it on Android, iOS, Windows (UWP) and the Web —
+Write your app's UI once in C++, run it on **Android**, **iOS**, **Windows** (UWP) and the **Web** —
 with **real native views** on every platform.
 
 > [!WARNING]
