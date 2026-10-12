@@ -265,6 +265,17 @@ wText* wText::RichText_Append(cSpan *ri)
 	ri->end = (int)mutableAttributedString.length;
 
 	uiTextView.attributedText = mutableAttributedString; // .text -> for a possible non rich text version
+
+	// The layout calls sizeToFit on the label (see wWidget::SetPos_HW), so its frame fits the previous
+	// text (0x0 if it was empty). If the widget's size doesn't change, the layout won't run again:
+	// give the label its layout size back and fit it to the new text here.
+	if (prevs.setPosHw_prev_width >= 0 && prevs.setPosHw_prev_height >= 0)
+	{
+		CGRect f = uiTextView.frame;
+		f.size = CGSizeMake(prevs.setPosHw_prev_width, prevs.setPosHw_prev_height);
+		uiTextView.frame = f;
+		[uiTextView sizeToFit];
+	}
 #endif
 #if defined(WINAPI_FAMILY)
 
