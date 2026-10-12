@@ -1,0 +1,16 @@
+# line endings: LF in the repository, native in the working copy
+* text=auto
+*.sh text eol=lf
+*.bat text eol=crlf
+
+*.png binary
+*.jpg binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.a binary
+*.so binary
+*.lib binary
+*.pbxproj -text

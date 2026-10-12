@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\central.cpp" />
+    <ClCompile Include="..\..\local_storage.cpp" />
+    <ClCompile Include="..\..\cuicui.cpp" />
+    <ClCompile Include="..\..\timer.cpp" />
+    <ClCompile Include="..\..\wBase.cpp" />
+    <ClCompile Include="..\..\web_request.cpp" />
+    <ClCompile Include="..\..\wImage.cpp" />
+    <ClCompile Include="..\..\wScrollView.cpp" />
+    <ClCompile Include="..\..\wText.cpp" />
+    <ClCompile Include="..\..\wTextInput.cpp" />
+    <ClCompile Include="..\..\nws\wCalendar.cpp" />
+    <ClCompile Include="..\..\easing.cpp" />
+    <ClCompile Include="..\..\3rdParty\CodepointIterator\src\codepoint_iterator.cc" />
+    <ClCompile Include="..\..\nws\wTimePicker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\..\central.h" />
+    <ClInclude Include="..\..\local_storage.h" />
+    <ClInclude Include="..\..\cuicui.h" />
+    <ClInclude Include="..\..\platform.h" />
+    <ClInclude Include="..\..\utils.h" />
+    <ClInclude Include="..\..\timer.h" />
+    <ClInclude Include="..\..\wBase.h" />
+    <ClInclude Include="..\..\web_request.h" />
+    <ClInclude Include="..\..\wImage.h" />
+    <ClInclude Include="..\..\wScrollView.h" />
+    <ClInclude Include="..\..\wText.h" />
+    <ClInclude Include="..\..\wTextInput.h" />
+    <ClInclude Include="..\..\nws\wCalendar.h" />
+    <ClInclude Include="..\..\nws\wTimePicker.h" />
+  </ItemGroup>
+</Project>

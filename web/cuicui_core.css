@@ -1,0 +1,24 @@
+
+::-ms-clear { display: none; /* this disable the 'clear button' in <input> on Microsoft EDGE; cuicui doesn't handle this so we need to remove it. */ } 
+
+
+.b {   /* wbase */ /*note: see explaination in the c code */
+position: absolute;
+box-sizing: border-box;
+overflow: hidden; 
+pointer-events: none;
+} 
+
+.ts {  /*wText single line*/ /*note: see explaination in the c code */
+position: absolute;
+overflow: hidden;
+white-space: nowrap;
+user-select: none;
+}
+
+.tm {  /*wText multi line*/ /*note: see explaination in the c code */
+position: absolute;
+overflow-wrap: break-word;
+word-break: break-word;
+user-select: none;
+}

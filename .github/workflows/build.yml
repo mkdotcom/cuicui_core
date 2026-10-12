@@ -1,0 +1,56 @@
+# Builds the template app (github.com/mkdotcom/cuicui_project) against this version of the core.
+# The core alone is not an app: the template provides main.cpp and the platform projects.
+name: build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  web:
+    if: github.repository == 'mkdotcom/cuicui_core' # not on the private legacy repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: mkdotcom/cuicui_project
+      - uses: actions/checkout@v4
+        with:
+          path: cuicui_core
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 5.0.7
+      - name: Build (debug)
+        run: sh projects/web/_compile.sh debug
+      - name: Build (release)
+        run: sh projects/web/_compile.sh release
+
+  android:
+    if: github.repository == 'mkdotcom/cuicui_core' # not on the private legacy repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: mkdotcom/cuicui_project
+      - uses: actions/checkout@v4
+        with:
+          path: cuicui_core
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Build (debug)
+        working-directory: projects/android
+        run: bash gradlew assembleDebug
+
+  uwp:
+    if: github.repository == 'mkdotcom/cuicui_core' # not on the private legacy repo
+    # only the core library: the template app needs a signing certificate to be packaged
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      - name: Build core library (x64 Debug)
+        run: msbuild uwp/lib/cuicui_corelib.vcxproj /p:Configuration=Debug /p:Platform=x64 /m /v:minimal

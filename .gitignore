@@ -1,0 +1,39 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*~*.TMP
+*.swp
+.vscode/
+.idea/
+
+# Visual Studio (UWP static lib)
+.vs/
+*.user
+uwp/lib/x64/
+uwp/lib/cuicui_corelib/
+uwp/lib/ARM/
+uwp/lib/ARM64/
+uwp/lib/Win32/
+uwp/lib/Debug/
+uwp/lib/Release/
+uwp/lib/packages/
+*.obj
+*.pdb
+*.ipch
+*.tlog
+*.lastbuildstate
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+
+# CMake / Android / web build outputs
+CMakeFiles/
+CMakeCache.txt
+.cxx/
+*.o
+*.a
+*.wasm
