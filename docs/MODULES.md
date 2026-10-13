@@ -30,7 +30,7 @@ and the state of the existing ones.
   Objective-C++ for iOS, JS for the Web, NuGet/XAML for UWP).
 - It comes in one of two flavours:
   - **Widget module**: a class deriving from the core widget base class
-    (`wWidget`), created like any other widget: `dc += wOpenGl::Create(FILL, FILL);`
+    (`wWidget`), created like any other widget: `dc += wOpenGL::Create(FILL, FILL);`
   - **Service module**: a singleton exposing an async API with `std::function`
     callbacks: `cuicui_biometricAuth::GetInstance()->PromptUser(cb);`
 
@@ -141,6 +141,6 @@ install (per platform) · usage example · API reference · known issues · lice
 | Module | Kind | Android | iOS | UWP | Web | Notes |
 |---|---|---|---|---|---|---|
 | `cuicui_biometricAuth` | service | ✅ | ❌ | ❌ | ❌ | Known issues: the callback may report a failed attempt (`0`) before the final result; prompt texts are hard-coded (English) |
-| `cuicui_wOpenGL` | widget | ⚠ manual loop only | ✅ | ✅ (ANGLE) | ❌ | **Not published yet** |
+| `cuicui_wOpenGL` | widget | ⚠ manual loop only | ✅ | ✅ (ANGLE) | ❌ | Experimental |
 | `cuicui_wMap` | widget | ❌ | ❌ | ⚠ Bing Maps (service retired) | ⚠ Google Maps | Experimental |
 

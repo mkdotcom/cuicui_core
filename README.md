@@ -100,7 +100,7 @@ drop into a `modules/` folder next to `cuicui_core/`, then add to your platform 
 | Module | What | Status |
 |---|---|---|
 | [cuicui_biometricAuth](https://github.com/mkdotcom/cuicui_biometricAuth) | Fingerprint / face prompt | Android only |
-| cuicui_wOpenGL | OpenGL ES view widget | not published yet |
+| [cuicui_wOpenGL](https://github.com/mkdotcom/cuicui_wOpenGL) | OpenGL ES view widget | Experimental: Android (manual loop), iOS, UWP |
 | [cuicui_wMap](https://github.com/mkdotcom/cuicui_wMap) | Map widget | Experimental |
 
 The module contract (what a module provides, how it plugs into each platform) is
