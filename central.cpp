@@ -218,12 +218,9 @@ std::string cCentral::Private_GetUserDocumentFolderPath()
     Log("cCentral::GetUserDocumentFolderPath() -> " + d);
     return d;
 #elif defined(CUICUI_UWP)
-    assert(false); // nyi
-    auto a = Windows::Storage::ApplicationData::Current;
-    auto ss = a->TemporaryFolder;
-    auto ss2 = ss->Path;
-    std::string ss3 = UwpStringToStdString(ss2) + "\\";
-    return ss3;
+    // the app's private persistent folder (same role as the Android files dir / iOS Documents)
+    auto folder = Windows::Storage::ApplicationData::Current->LocalFolder;
+    return UwpStringToStdString(folder->Path) + "\\";
 #elif defined(CUICUI_WEB)
     return "not available on web (yet)"; // TODO
 #elif defined(CUICUI_IOS)

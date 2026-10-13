@@ -12,6 +12,9 @@ may contain breaking changes.
 - iOS: removed the obsolete static library project `ios/lib/`.
 
 ### Fixed
+- UWP: apps built in Debug stopped at startup (`assert` in the documents-folder lookup). The documents
+  folder is now the app's persistent `LocalFolder` (it was the temp folder in Release).
+- UWP: the core library is compiled with `/utf-8` (sources are UTF-8; add `/utf-8` to your app project too).
 - iOS: `cCentral::OpenFilePicker()` called a picker method that the host didn't have.
 - iOS: a `wText` whose text changed without a new layout (e.g. created empty) stayed invisible.
 
