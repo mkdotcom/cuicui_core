@@ -12,6 +12,7 @@ may contain breaking changes.
 - iOS: removed the obsolete static library project `ios/lib/`.
 
 ### Fixed
+- UWP: text and password inputs now stretch to fill their widget, so the full field accepts clicks and focus.
 - UWP: apps built in Debug stopped at startup (`assert` in the documents-folder lookup). The documents
   folder is now the app's persistent `LocalFolder` (it was the temp folder in Release).
 - UWP: the core library is compiled with `/utf-8` (sources are UTF-8; add `/utf-8` to your app project too).

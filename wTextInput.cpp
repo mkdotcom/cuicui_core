@@ -281,13 +281,16 @@ wTextInput::wTextInput(eType a_type) : wWidget()
 		passwordBox->BorderThickness = 0; // remove default border
 
 
-		b = ref new Canvas();
-		((Canvas^)b)->Children->Append(passwordBox);
+		// Grid stretches the native editor to the widget's full hit-test area.
+		b = ref new Grid();
+		((Grid^)b)->Children->Append(passwordBox);
 		
 		hd = ref new cCuiElement_uwp(this);
 
 		auto style = GetAppStyle("PasswordBoxStyleCui");
 		passwordBox->Style = safe_cast<Windows::UI::Xaml::Style ^>(style);
+		passwordBox->HorizontalAlignment = HorizontalAlignment::Stretch;
+		passwordBox->VerticalAlignment = VerticalAlignment::Stretch;
 
 		passwordBox->PasswordChanged += ref new RoutedEventHandler(hd, &cCuiElement_uwp::textinput_PasswordChanged);
 		passwordBox->KeyUp += ref new KeyEventHandler(hd, &cCuiElement_uwp::textinput_OnKeyUp);
@@ -320,13 +323,16 @@ wTextInput::wTextInput(eType a_type) : wWidget()
 		textBox->Padding = 0;
 		textBox->BorderThickness = 0; // remove default border
 
-		b = ref new Canvas();
-		((Canvas^)b)->Children->Append(textBox);
+		// Canvas leaves the editor at its desired size, even when the widget is wider.
+		b = ref new Grid();
+		((Grid^)b)->Children->Append(textBox);
 
 		hd = ref new cCuiElement_uwp(this);
 		
 		auto style = GetAppStyle("TextBoxStyleCui");
 		textBox->Style = safe_cast<Windows::UI::Xaml::Style ^>(style);
+		textBox->HorizontalAlignment = HorizontalAlignment::Stretch;
+		textBox->VerticalAlignment = VerticalAlignment::Stretch;
 
 		textBox->TextChanged += ref new TextChangedEventHandler(hd, &cCuiElement_uwp::textinput_TextChanged);
 		textBox->KeyUp += ref new KeyEventHandler(hd, &cCuiElement_uwp::textinput_OnKeyUp);
