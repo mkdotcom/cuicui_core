@@ -2051,7 +2051,7 @@ void cCuiElement_uwp::OnDragOver(Platform::Object ^sender, DragEventArgs ^e) // 
 
 
 // reads a picked / pasted / dropped file and sends it to onFileReceived (base64)
-static task<void> UwpReceiveFile(Windows::Storage::Streams::IRandomAccessStreamWithContentType ^inputStream, String ^mimeType, String ^fileName)
+static task<void> UwpReceiveFile(Windows::Storage::Streams::IRandomAccessStream ^inputStream, String ^mimeType, String ^fileName)
 {
 	// TODO: try/catch  + event onFileReceivedFailed ?
 	Log("uploaded file mimetype : " + UwpStringToStdString(mimeType));
@@ -2095,19 +2095,31 @@ task<void> OnDropStep2(Windows::ApplicationModel::DataTransfer::DataPackageView 
 
 task<void> OnPasteOnTextInputStep2_Bitmap(Windows::ApplicationModel::DataTransfer::DataPackageView ^dataPackageView, wWidget *w)
 {
-
-	Windows::Storage::Streams::RandomAccessStreamReference ^stream = co_await dataPackageView->GetBitmapAsync();
-	if (stream)
+	try
 	{
+		auto stream = co_await dataPackageView->GetBitmapAsync();
+		if (stream == nullptr) return;
 
-		// NOTE: we know it's an image as it's a Bitmap (see cCuiElement_uwp::OnPasteOnTextInput) and it seems it's always BMP format
-		// It's better to convert to jpg or png (as BMP file is large and mostly deprecated)
-		// TODO: CONVERT TO JPG
-		std::string fakeFileName = GenFakeBmpFileName(); // we don't have a filename so we generate a fake one
-		std::string mimeType = "image/bmp"; 
+		// Clipboard bitmaps can be BMP, which the server thumbnail generator cannot read.
+		// Encode the actual pixels as PNG, preserving their size and transparency.
+		auto inputStream = co_await stream->OpenReadAsync();
+		auto decoder = co_await Windows::Graphics::Imaging::BitmapDecoder::CreateAsync(inputStream);
+		auto bitmap = co_await decoder->GetSoftwareBitmapAsync(
+			Windows::Graphics::Imaging::BitmapPixelFormat::Bgra8,
+			Windows::Graphics::Imaging::BitmapAlphaMode::Straight);
+		auto pngStream = ref new Windows::Storage::Streams::InMemoryRandomAccessStream();
+		auto encoder = co_await Windows::Graphics::Imaging::BitmapEncoder::CreateAsync(
+			Windows::Graphics::Imaging::BitmapEncoder::PngEncoderId, pngStream);
+		encoder->SetSoftwareBitmap(bitmap);
+		co_await encoder->FlushAsync();
+		pngStream->Seek(0);
 
-		UwpPickGnia(stream, StdStringToUwpString(mimeType), StdStringToUwpString(fakeFileName));
-		
+		co_await UwpReceiveFile(pngStream, L"image/png", StdStringToUwpString(generate_hex(10) + ".png"));
+	}
+	catch (Platform::Exception ^ex)
+	{
+		LogError("Cannot convert clipboard image to PNG: " + UwpStringToStdString(ex->Message));
+		central.MessageBox("Can't read this clipboard image.");
 	}
 }
 
