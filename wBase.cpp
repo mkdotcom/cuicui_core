@@ -1192,6 +1192,21 @@ void wWidget::TransformToParentInDom(pixels &_x, pixels &_y) // use convertcoord
 		p = p->parent;
 	}
 
+#if defined(CUICUI_WEB) || defined(CUICUI_UWP)
+	// Cuicui positions children from the outer edge. CSS and XAML grids
+	// position them from the inner edge of their native parent's border.
+	if (p && p->border_use
+#if defined(CUICUI_UWP)
+		&& p->coreType != eCoreType::Image // Apply_Border_Private2 skips UWP images.
+#endif
+	)
+	{
+		const double inset = p->border2_args.thicknessInPixels.AsDouble();
+		x -= inset;
+		y -= inset;
+	}
+#endif
+
 	_x.setFromDouble(x);
 	_y.setFromDouble(y);
 
