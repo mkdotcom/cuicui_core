@@ -419,8 +419,23 @@ cSpan::cSpan(const std::string _text)
 
 std::string cSpan::GetAsHtml(wText *parent)
 {
+	// Span content is plain text, not HTML. Escape in one pass so literal
+	// entities stay literal and the generated entities are not escaped again.
+	std::string escapedText;
+	escapedText.reserve(text.size());
+	for (char c : text)
+	{
+		switch (c)
+		{
+		case '&': escapedText += "&amp;"; break;
+		case '<': escapedText += "&lt;"; break;
+		case '>': escapedText += "&gt;"; break;
+		default: escapedText += c; break;
+		}
+	}
+
 	if (isTouchable == false && bold == false && italic == false && usingTextColor == false)
-		return text; // optim
+		return escapedText; // optim
  
 	std::string s = "<span ";
 
@@ -446,7 +461,7 @@ std::string cSpan::GetAsHtml(wText *parent)
 	}
 
 	s += ">";
-	s += text;
+	s += escapedText;
 	s += "</span>";
 
 	return s;
