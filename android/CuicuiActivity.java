@@ -2250,6 +2250,13 @@ public class CuicuiActivity extends FragmentActivity implements LifecycleObserve
         //tv.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    public void cuiTextBlock_CenterText(int parentElemViewId)
+    {
+        CustomFrameLayout fl = createdElements.get(parentElemViewId);
+        TextView tv = (TextView)fl.getChildAt(0);
+        tv.setGravity((tv.getGravity() & ~android.view.Gravity.HORIZONTAL_GRAVITY_MASK) | android.view.Gravity.CENTER_HORIZONTAL);
+    }
+
     public void cuiTextBlock_SetEllipsis(int parentElemViewId)
     {
         CustomFrameLayout fl = createdElements.get(parentElemViewId);

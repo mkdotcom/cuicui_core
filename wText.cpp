@@ -127,6 +127,61 @@ void wText::ClearSelection()
 #endif
 }
 
+#if defined(CUICUI_IOS)
+void wText::FitIosTextToLayout(double width, double height)
+{
+    CGRect frame = uiTextView.frame;
+    frame.size = CGSizeMake(width, height);
+    uiTextView.frame = frame;
+    if (centeredText) {
+        // Keep the layout width for horizontal centering and wrapping. Fit only
+        // the height so UILabel does not vertically center text in a tall widget.
+        CGSize fitted = [uiTextView sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
+        frame.size.height = std::min(height, (double)fitted.height);
+        uiTextView.frame = frame;
+    } else {
+        [uiTextView sizeToFit];
+    }
+}
+#endif
+
+void wText::OnNativeFrameChanged(double width, double height)
+{
+#if defined(CUICUI_UWP)
+    // Canvas does not stretch its children: alignment/trimming need the layout width.
+    if (centeredText) {
+        tb->Width = width;
+        tb->Height = height;
+    }
+#endif
+}
+
+wText* wText::CenterText()
+{
+    centeredText = true;
+#if defined(CUICUI_ANDROID)
+    JNICall_Void_Int("cuiTextBlock_CenterText", theId);
+#elif defined(CUICUI_UWP)
+    tb->TextAlignment = Windows::UI::Xaml::TextAlignment::Center;
+    // SetPos_HW skips unchanged frames. Apply the last layout immediately when
+    // centering an already displayed label; before first layout the sizes are unset.
+    if (prevs.setPosHw_prev_width >= 0 && prevs.setPosHw_prev_height >= 0) {
+        wText::OnNativeFrameChanged(prevs.setPosHw_prev_width, prevs.setPosHw_prev_height);
+    }
+#elif defined(CUICUI_WEB)
+    EM_ASM({
+        var text = gu($0.toString());
+        if (text) text.style.textAlign = "center";
+    }, htmlId);
+#elif defined(CUICUI_IOS)
+    uiTextView.textAlignment = NSTextAlignmentCenter;
+    if (prevs.setPosHw_prev_width >= 0 && prevs.setPosHw_prev_height >= 0) {
+        FitIosTextToLayout(prevs.setPosHw_prev_width, prevs.setPosHw_prev_height);
+    }
+#endif
+    return this;
+}
+
 wText* wText::Ellipsis()
 {
 	assert(isSingleLine); // not available on multiline wText
@@ -265,16 +320,15 @@ wText* wText::RichText_Append(cSpan *ri)
 	ri->end = (int)mutableAttributedString.length;
 
 	uiTextView.attributedText = mutableAttributedString; // .text -> for a possible non rich text version
+    // Assigning attributedText may replace label styling. Reapply the requested alignment.
+    if (centeredText) uiTextView.textAlignment = NSTextAlignmentCenter;
 
 	// The layout calls sizeToFit on the label (see wWidget::SetPos_HW), so its frame fits the previous
 	// text (0x0 if it was empty). If the widget's size doesn't change, the layout won't run again:
 	// give the label its layout size back and fit it to the new text here.
 	if (prevs.setPosHw_prev_width >= 0 && prevs.setPosHw_prev_height >= 0)
 	{
-		CGRect f = uiTextView.frame;
-		f.size = CGSizeMake(prevs.setPosHw_prev_width, prevs.setPosHw_prev_height);
-		uiTextView.frame = f;
-		[uiTextView sizeToFit];
+        FitIosTextToLayout(prevs.setPosHw_prev_width, prevs.setPosHw_prev_height);
 	}
 #endif
 #if defined(WINAPI_FAMILY)
@@ -659,9 +713,20 @@ bool wText::ComputeMinSize_Private(double * w, double * h, double requiredWidthI
 #if defined(CUICUI_UWP)
 	//SetPos_HW(pzero, pzero, requiredWidthInPixels, 0); // definitely not, that breaks the cache
 	Size s2((float)requiredWidthInPixels, (float)10000000);
+    // A previously arranged centered label must still be measured at its natural size.
+    const double previousWidth = tb->Width;
+    const double previousHeight = tb->Height;
+    if (centeredText) {
+        tb->Width = std::numeric_limits<double>::quiet_NaN();
+        tb->Height = std::numeric_limits<double>::quiet_NaN();
+    }
 	tb->Measure(s2);				 // TODO/PERF: would not doing measure and using actualheight work?
 	double desiredWidthInPixels = tb->DesiredSize.Width;
 	double desiredHeightInPixels = tb->DesiredSize.Height;
+    if (centeredText) {
+        tb->Width = previousWidth;
+        tb->Height = previousHeight;
+    }
 	*w = (desiredWidthInPixels);  
 	*h = (desiredHeightInPixels);  
 #elif defined(CUICUI_WEB)

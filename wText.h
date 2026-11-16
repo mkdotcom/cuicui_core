@@ -101,6 +101,12 @@ public:	 // protected:
 public:
 	void ClearSelection();	
 	void AllowTextSelection(); // WARNING! This have side effects: some touch/mouse events may not be called (and maybe other side effects)	? This may not be true anymore
+#if defined(CUICUI_IOS)
+    void FitIosTextToLayout(double width, double height);
+#endif
+    bool centeredText = false;
+    void OnNativeFrameChanged(double width, double height) override;
+	wText* CenterText();
 	wText* Ellipsis();		
 	void UpdateRealFontSize(); // DUPLICATE_5671	
 	cSpan* GetRichItemFromId(int riId);	

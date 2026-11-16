@@ -1457,7 +1457,7 @@ void wWidget::SetPos_HW(pixels x, pixels y, double width, double height)
 	if (coreType == eCoreType::Text) // TODO: IOS, we have to do this because we can't "autofit" wWidget's children; find the right config "autolayout/resizemask/whatever"
 	{
 		wText *t = (wText*)this;
-        [t->uiTextView sizeToFit]; // this is very important (because UILabel centers text vertically, this make the text fit the frame, so the "vertical align" can't apply)
+        t->FitIosTextToLayout(width, height); // fit height; centered labels must keep the layout width
 	}
     if (coreType == eCoreType::WebView) // TODO: IOS, we have to do this because we can't "autofit" wWidget's children; find the right config "autolayout/resizemask/whatever"
     {
